@@ -1,0 +1,97 @@
+<template>
+    <NodeTemplate @click="addNode" title="If" firstColor='e0d74c' secondColor="ffef00">
+        <template #content>
+            <div ref="node" class="node">
+                <select v-model="condition">
+                    <option value="equal">Equal to</option>
+                    <option value="greater">Greater than</option>
+                    <option value="smaller">Smaller than</option>
+                </select>
+                <input type="number" v-model="number"/>
+            </div>
+        </template>
+    </NodeTemplate>
+</template>
+
+<script setup>
+import { defineEmits, defineProps, onMounted, ref, nextTick } from 'vue';
+import NodeTemplate from '@/components/Board/Nodes/NodeTemplate.vue'
+
+const values = {
+    'name': 'if',
+    'inputs': 1,
+    'outputs': 2,
+    'node': 'nodeIf'
+}
+
+const props = defineProps({
+    editor: {
+        type: Object,
+    }
+})
+
+let node = ref(null);
+let id = ref(0);
+
+const variableName = ref();
+
+const condition = ref("equal")
+const number = ref(0)
+
+const emit = defineEmits(["addNode"]);
+const addNode = () => emit('addNode', values)
+
+const updateData = () => {
+    const obj = {...props.editor.getNodeFromId(id).data};
+    obj['output'] = variableName.value;
+    
+    const input1 = obj['input_1']
+    const input2 = obj['input_2']
+    obj['python'] = `${variableName.value} = ${input1} + ${input2}`
+    props.editor.updateNodeDataFromId(id, obj)
+}
+
+onMounted(async () => {
+    await nextTick();
+    id = node.value.parentElement.parentElement.parentElement.id.split('-')[1];
+    props.editor.on('connectionCreated', connection => connectionCreated(connection))
+});
+
+const connectionCreated = (connection) => {
+    if(connection.input_id == id){
+        const obj = {...props.editor.getNodeFromId(id).data}
+        obj['input_1'] = props.editor.getNodeFromId(connection.output_id).data.output
+        obj['condition'] = condition.value == 'equal' ? `if ${obj.input_1} == ${number.value}:` : condition.value == 'greater' ? `if ${obj.input_1} > ${number.value}:` : `if ${obj.input_1} < ${number.value}:`
+        obj.yes_path != undefined && obj.no_path != undefined ? obj['python'] = `${obj.condition}\n  ${obj.yes_path}\nelse:\n   ${obj.no_path}` : obj.yes_path != undefined && obj.no_path == undefined ? obj['python'] = `${obj.condition}\n  ${obj.yes_path}\n` : {}
+        props.editor.updateNodeDataFromId(id, obj)
+    }else if(connection.output_id == id){
+        const obj = {...props.editor.getNodeFromId(id).data}
+        connection.output_class == 'output_1' ? obj['yes_path'] = props.editor.getNodeFromId(connection.input_id).data.python : obj['no_path'] = props.editor.getNodeFromId(connection.input_id).data.python
+        obj.yes_path != undefined && obj.no_path != undefined ? obj['python'] = `${obj.condition}\n  ${obj.yes_path}\nelse:\n   ${obj.no_path}` : obj.yes_path != undefined && obj.no_path == undefined ? obj['python'] = `${obj.condition}\n  ${obj.yes_path}\n` : {}
+        props.editor.updateNodeDataFromId(id, obj)
+    }
+    
+}
+</script>
+
+<style scoped>
+.variable-name, .number {
+    margin: 4px 0 4px 0;
+    padding: 4px 6px 4px 6px;
+    border-radius: 5px;
+    border: none;
+}
+.node {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 5px;
+}
+.node:hover{
+    cursor: move;
+}
+p {
+    padding-left: 4px;
+    color: white;
+}
+</style>

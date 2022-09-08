@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+html, body {
+  font-family: 'Lato', sans-serif;
+}
+
+*, :after, :before {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.drawflow {
+  width: 500%;
+  height: 500%;
+  user-select: none;
+  position: relative;
+}
+
+.drawflow .drawflow-node {
+  position: absolute;
+  z-index: 2;
+}
+
+.drawflow-node {
+  display: flex;
+  flex-direction: row;
+}
+
+.outputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 5px;
+}
+
+.output {
+  cursor: crosshair;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #222;
+  margin: 4px 0 4px 0;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 5px;
+}
+
+.input {
+  cursor: crosshair;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #222;
+  margin: 4px 0 4px 0;
+}
+
+.connection {
+  position: absolute;
+  pointer-events: none;
+}
+
+.drawflow svg {
+  z-index: 0;
+  position: absolute;
+  overflow: visible!important;
+}
+
+.drawflow .connection .main-path {
+  stroke-width: 3px;
+  fill: none;
+  stroke-width: 5px;
+  stroke: #222;
+  pointer-events: all;
+}
+
+.connection-block-of-code {
+  stroke: red;
+}
+
+.selected .drawflow_content_node .node-template {
+  border: 3px solid #000;
+}
