@@ -40,6 +40,8 @@ const addNode = () => {
 
 const updateData = () => {
     const obj = {...props.editor.getNodeFromId(id).data}
+    obj['variableName'] = `${variableName.value}`
+    obj['number'] = `${number.value}`
     obj['python'] = `${variableName.value} = ${number.value}`
     obj['output'] = `${variableName.value}`
     
@@ -49,6 +51,11 @@ const updateData = () => {
 onMounted(async () => {
     await nextTick();
     id = node.value.parentElement.parentElement.parentElement.id.split('-')[1];
+
+    const data = props.editor.getNodeFromId(id).data
+    data.variableName != undefined ? variableName.value = data.variableName : {}
+    data.number != undefined ? number.value = data.number : {}
+
 });
 </script>
 

@@ -2,12 +2,12 @@
     <NodeTemplate @click="addNode" title="If" firstColor='e0d74c' secondColor="ffef00">
         <template #content>
             <div ref="node" class="node">
-                <select v-model="condition">
+                <select @change="updateData" v-model="condition">
                     <option value="equal">Equal to</option>
                     <option value="greater">Greater than</option>
                     <option value="smaller">Smaller than</option>
                 </select>
-                <input type="number" v-model="number"/>
+                <input @change="updateData" type="number" v-model="number"/>
             </div>
         </template>
     </NodeTemplate>
@@ -33,8 +33,6 @@ const props = defineProps({
 let node = ref(null);
 let id = ref(0);
 
-const variableName = ref();
-
 const condition = ref("equal")
 const number = ref(0)
 
@@ -45,15 +43,20 @@ const updateData = () => {
     const obj = {...props.editor.getNodeFromId(id).data};
     obj['output'] = variableName.value;
     
-    const input1 = obj['input_1']
-    const input2 = obj['input_2']
-    obj['python'] = `${variableName.value} = ${input1} + ${input2}`
+    obj['selection'] = condition.value
+    number.value != undefined ? obj['number'] = number.value : {}
+    
     props.editor.updateNodeDataFromId(id, obj)
 }
 
 onMounted(async () => {
     await nextTick();
     id = node.value.parentElement.parentElement.parentElement.id.split('-')[1];
+
+    const data = props.editor.getNodeFromId(id).data
+    data.selection != undefined ? condition.value = data.selection : {}
+    data.number != undefined ? number.value = data.number : {}
+
     props.editor.on('connectionCreated', connection => connectionCreated(connection))
 });
 
@@ -62,12 +65,12 @@ const connectionCreated = (connection) => {
         const obj = {...props.editor.getNodeFromId(id).data}
         obj['input_1'] = props.editor.getNodeFromId(connection.output_id).data.output
         obj['condition'] = condition.value == 'equal' ? `if ${obj.input_1} == ${number.value}:` : condition.value == 'greater' ? `if ${obj.input_1} > ${number.value}:` : `if ${obj.input_1} < ${number.value}:`
-        obj.yes_path != undefined && obj.no_path != undefined ? obj['python'] = `${obj.condition}\n  ${obj.yes_path}\nelse:\n   ${obj.no_path}` : obj.yes_path != undefined && obj.no_path == undefined ? obj['python'] = `${obj.condition}\n  ${obj.yes_path}\n` : {}
+        obj.yes_path != undefined && obj.no_path != undefined ? obj['python'] = `${obj.condition}\n   ${obj.yes_path}\nelse:\n   ${obj.no_path}` : obj.yes_path != undefined && obj.no_path == undefined ? obj['python'] = `${obj.condition}\n   ${obj.yes_path}\n` : {}
         props.editor.updateNodeDataFromId(id, obj)
     }else if(connection.output_id == id){
         const obj = {...props.editor.getNodeFromId(id).data}
         connection.output_class == 'output_1' ? obj['yes_path'] = props.editor.getNodeFromId(connection.input_id).data.python : obj['no_path'] = props.editor.getNodeFromId(connection.input_id).data.python
-        obj.yes_path != undefined && obj.no_path != undefined ? obj['python'] = `${obj.condition}\n  ${obj.yes_path}\nelse:\n   ${obj.no_path}` : obj.yes_path != undefined && obj.no_path == undefined ? obj['python'] = `${obj.condition}\n  ${obj.yes_path}\n` : {}
+        obj.yes_path != undefined && obj.no_path != undefined ? obj['python'] = `${obj.condition}\n   ${obj.yes_path}\nelse:\n   ${obj.no_path}` : obj.yes_path != undefined && obj.no_path == undefined ? obj['python'] = `${obj.condition}\n   ${obj.yes_path}\n` : {}
         props.editor.updateNodeDataFromId(id, obj)
     }
     

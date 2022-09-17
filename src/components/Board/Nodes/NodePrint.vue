@@ -38,14 +38,23 @@ const addNode = () => emit('addNode', values)
 const updateData = () => {
     const data = props.editor.getNodeFromId(id).data
     const obj = {...data}
-    obj['python'] = text != undefined && variable != undefined ? `print('${text.value}', ${variable.value})` : text != undefined && variable == undefined ? `print('${text.value}')` : text == undefined && variable != undefined ? `print(${variable.value})` : `print('')`
-    obj['output'] = text != undefined && variable != undefined ? `print('${text.value}', ${variable.value})` : text != undefined && variable == undefined ? `print('${text.value}')` : text == undefined && variable != undefined ? `print(${variable.value})` : `print('')`
+    
+    text.value != undefined ? obj['text'] = text.value : {}
+    variable.value != undefined ? obj['variable'] = variable.value : {}
+
+    text.value != undefined && variable.value != undefined ? obj['python'] = `print('${text.value}', ${variable.value})` : text.value != undefined && variable.value == undefined ? obj['python'] = `print('${text.value}')` : text.value == undefined && variable.value != undefined ? obj['python'] = `print(${variable.value})` : obj['python'] = `print('')`
+    text.value != undefined && variable.value != undefined ? obj['output'] = `print('${text.value}', ${variable.value})` : text.value != undefined && variable.value == undefined ? obj['output'] = `print('${text.value}')` : text.value == undefined && variable.value != undefined ? obj['output'] = `print(${variable.value})` : obj['output'] = `print('')`
+    
     props.editor.updateNodeDataFromId(id, obj)
 }
 
 onMounted(async () => {
     await nextTick();
     id = node.value.parentElement.parentElement.parentElement.id.split('-')[1];
+
+    const data = props.editor.getNodeFromId(id).data
+    data.text != undefined ? text.value = data.text : {}
+    data.variable != undefined ? variable.value = data.variable : {}
 });
 </script>
 

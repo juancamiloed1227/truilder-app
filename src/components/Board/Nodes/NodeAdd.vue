@@ -36,17 +36,43 @@ const addNode = () => emit('addNode', values)
 const updateData = () => {
     const obj = {...props.editor.getNodeFromId(id).data};
     obj['output'] = variableName.value;
-    
-    const input1 = obj['input_1']
-    const input2 = obj['input_2']
-    obj['python'] = `${variableName.value} = ${input1} + ${input2}`
+    variableName.value != undefined ? obj['variable'] = variableName.value : {}
+
+    const number1 = obj['number1']
+    const number2 = obj['number2']
+    obj['python'] = `${variableName.value} = ${number1} + ${number2}`
     props.editor.updateNodeDataFromId(id, obj)
 }
 
 onMounted(async () => {
     await nextTick();
     id = node.value.parentElement.parentElement.parentElement.id.split('-')[1];
+    props.editor.on('connectionCreated', connection => connectionCreated(connection))
+
+    const data = props.editor.getNodeFromId(id).data
+    data.variable != undefined ? variableName.value = data.variable : {}
 });
+
+const connectionCreated = (connection) => {
+    if(connection.input_id == id) {
+        const input_node = props.editor.getNodeFromId(id)
+        const output_node = props.editor.getNodeFromId(connection.output_id)
+        let obj = {...input_node.data};
+
+        if(output_node.class == 'number') {
+            if(Object.keys(input_node.inputs).length == 2){
+                obj['number1'] = obj['input_1']
+                obj['number2'] = obj['input_2']
+            }else {
+                obj['number1'] = obj['input_2']
+                obj['number2'] = obj['input_3']
+            }
+        }
+
+        props.editor.updateNodeDataFromId(id, obj)
+        updateData()
+    }
+}
 </script>
 
 <style scoped>

@@ -6,14 +6,14 @@
                 <p class="code">{{props.pythonCode}}</p>
             </div> 
             <div class="terminal-window">
-                <p>Output</p>
+                <p>{{terminal}}</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, watchEffect, ref } from 'vue';
 
 const emit = defineEmits(["close"])
 
@@ -25,6 +25,25 @@ const props = defineProps({
 })
 
 const close = () => emit('close')
+const terminal = ref('Hola');
+
+watchEffect(() => {
+    if(props.pythonCode != '' ){
+        let _datos = {
+            code: props.pythonCode,
+        }
+
+        fetch('http://localhost:3000/flows/execute', {
+            method: "POST",
+            mode: 'cors',
+            body: JSON.stringify(_datos)            
+        })
+        .then(response => response.json()) 
+        .then(json => {
+            terminal.value = json.response
+        });
+    }
+})
 </script>
 
 <style scoped>

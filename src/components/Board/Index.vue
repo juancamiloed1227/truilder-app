@@ -8,6 +8,9 @@ import Drawflow from 'drawflow'
 import { onMounted, h, getCurrentInstance, render, inject, ref } from 'vue'
 import NodeNumber from './Nodes/NodeNumber';
 import NodeAdd from './Nodes/NodeAdd.vue';
+import NodeSubtract from './Nodes/NodeSubtraction.vue';
+import NodeMultiply from './Nodes/NodeMultiply.vue';
+import NodeDivide from './Nodes/NodeDivide.vue';
 import NodePrint from './Nodes/NodePrint.vue';
 import NodeIf from './Nodes/NodeIf.vue';
 import NodeBlock from './Nodes/NodeBlock.vue';
@@ -46,6 +49,9 @@ onMounted(() => {
 
     editor.value.registerNode('nodeNumber', NodeNumber, { 'editor': editor.value }, {});
     editor.value.registerNode('nodeAdd', NodeAdd, { 'editor': editor.value }, {});
+    editor.value.registerNode('nodeSubtract', NodeSubtract, { 'editor': editor.value }, {});
+    editor.value.registerNode('nodeMultiply', NodeMultiply, { 'editor': editor.value }, {});
+    editor.value.registerNode('nodeDivide', NodeDivide, { 'editor': editor.value }, {});
     editor.value.registerNode('nodePrint', NodePrint, { 'editor': editor.value }, {});
     editor.value.registerNode('nodeIf', NodeIf, { 'editor': editor.value }, {});
     editor.value.registerNode('nodeBlock', NodeBlock, { 'editor': editor.value }, {});

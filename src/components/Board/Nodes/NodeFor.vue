@@ -37,6 +37,7 @@ const controlVariable = ref();
 const updateData = () => {
     const node = props.editor.getNodeFromId(id)
     const obj = {...node.data}
+    controlVariable.value != undefined ? obj['controlVariable'] = controlVariable.value : {}
     obj['python'] = obj['loop'] ? `for i in range(${controlVariable.value}):\n  ${obj.loop}` : `for i in range(${controlVariable.value}):\n   `
     props.editor.updateNodeDataFromId(id, obj)
 }
@@ -45,6 +46,9 @@ onMounted(async () => {
     await nextTick();
     id = node.value.parentElement.parentElement.parentElement.id.split('-')[1];
     props.editor.on('connectionCreated', connection => connectionCreated(connection))
+
+    const data = props.editor.getNodeFromId(id).data
+    data.controlVariable != undefined ? controlVariable.value = data.controlVariable : {}
 });
 
 const connectionCreated = (connection) => {
@@ -52,6 +56,7 @@ const connectionCreated = (connection) => {
         const input_node = props.editor.getNodeFromId(connection.input_id)
         const obj = {...input_node.data}
         obj['convertible'] = false
+        props.editor.updateNodeDataFromId(connection.input_id, obj)
         if(obj['python']){
             const output_data = {...props.editor.getNodeFromId(id).data}
             if(output_data.python != undefined) {
