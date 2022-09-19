@@ -77,6 +77,7 @@ img {
     padding: 20px;
     color: whitesmoke;
     font-family: 'Source Code Pro', monospace;
+    overflow-y: auto;
 }
 .code {
     white-space: pre-wrap; 

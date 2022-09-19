@@ -8,6 +8,7 @@
             <NodeSubtract @addNode="addNodeToBoard"/>
             <NodeMultiply @addNode="addNodeToBoard"/>
             <NodeDivide @addNode="addNodeToBoard"/>
+            <NodeModule @addNode="addNodeToBoard"/>
         </div>
         <div class="list" v-else-if="nodeType == 'Logic'">
             <NodeBlock @addNode="addNodeToBoard" />
@@ -26,7 +27,8 @@ import NodeNumber from '../Board/Nodes/NodeNumber.vue'
 import NodeAdd from '../Board/Nodes/NodeAdd.vue';
 import NodeSubtract from '../Board/Nodes/NodeSubtraction.vue';
 import NodeMultiply from '../Board/Nodes/NodeMultiply.vue';
-import NodeDivide from '../Board/Nodes/NodeDivide.vue'
+import NodeDivide from '../Board/Nodes/NodeDivide.vue';
+import NodeModule from '../Board/Nodes/NodeModule.vue';
 import NodePrint from '../Board/Nodes/NodePrint.vue';
 import NodeIf from '../Board/Nodes/NodeIf.vue';
 import NodeBlock from '../Board/Nodes/NodeBlock.vue';

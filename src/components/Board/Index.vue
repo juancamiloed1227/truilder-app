@@ -11,6 +11,7 @@ import NodeAdd from './Nodes/NodeAdd.vue';
 import NodeSubtract from './Nodes/NodeSubtraction.vue';
 import NodeMultiply from './Nodes/NodeMultiply.vue';
 import NodeDivide from './Nodes/NodeDivide.vue';
+import NodeModule from './Nodes/NodeModule.vue';
 import NodePrint from './Nodes/NodePrint.vue';
 import NodeIf from './Nodes/NodeIf.vue';
 import NodeBlock from './Nodes/NodeBlock.vue';
@@ -52,6 +53,7 @@ onMounted(() => {
     editor.value.registerNode('nodeSubtract', NodeSubtract, { 'editor': editor.value }, {});
     editor.value.registerNode('nodeMultiply', NodeMultiply, { 'editor': editor.value }, {});
     editor.value.registerNode('nodeDivide', NodeDivide, { 'editor': editor.value }, {});
+    editor.value.registerNode('nodeModule', NodeModule, { 'editor': editor.value }, {});
     editor.value.registerNode('nodePrint', NodePrint, { 'editor': editor.value }, {});
     editor.value.registerNode('nodeIf', NodeIf, { 'editor': editor.value }, {});
     editor.value.registerNode('nodeBlock', NodeBlock, { 'editor': editor.value }, {});
