@@ -1,19 +1,14 @@
-# drawflow-test
+# Truilder App
 
-## Project setup
-```
-npm install
-```
+This project develops Truilder, a web application that allows to generate Python code through visual code blocks that are concatenated. From these it is possible to generate Python code that can be executed to obtain an output.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Features
+- Creation of code flows from nodes by dragging and dropping.
+- Assignment of variables from numbers or arithmetic operations.
+- Construction of basic control blocks such as conditionals or cycles.
+- Execution of Python code generated through nodes.
+- Possibility to save, retrieve, update and delete built code flows.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Tech
+Truilder app was built using Vue 3 and the Drawflow library for building flows.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
